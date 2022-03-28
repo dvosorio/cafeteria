@@ -1,0 +1,29 @@
+Options +FollowSymLinks
+RewriteEngine on
+RewriteBase /cafeteria/
+
+#RESTRINCIONES QUERY
+RewriteCond %{QUERY_STRING} (;|<|>|’|”|\)|%0A|%0D|%22|%27|%3C|%3E|%00).*(/\*|union|select|insert|cast|set|declare|drop|update|md5|benchmark) [NC,OR]
+RewriteCond %{QUERY_STRING} \.\./\.\. [OR]
+RewriteCond %{QUERY_STRING} \.[a-z0-9] [NC,OR]
+RewriteCond %{QUERY_STRING} (<|>|’|%0A|%0D|%27|%3C|%3E|%00) [NC]
+
+#PETICIONES EXTERNAS	
+RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^(java|curl|wget) [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} (winhttp|HTTrack|clshttp|archiver|loader|email|harvest|extract|grab|miner) [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} (libwww-perl|curl|wget|python|nikto|scan) [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} (<|>|’|%0A|%0D|%27|%3C|%3E|%00) [NC]
+
+RewriteRule ^()/ - [F]
+
+#INICIO
+RewriteRule ^inicio$ views/home/inicio.php [L]
+
+#PRODUCTOS
+RewriteRule ^crear-prodctos$ views/productos/create.php [L]
+RewriteRule ^listar-prodctos$ views/productos/list.php [L]
+RewriteRule ^editar-prodctos/(.+)$ views/productos/edit.php?id=$1 [L]
+
+#TIENDA
+RewriteRule ^tienda$ views/tienda/details.php [L]
